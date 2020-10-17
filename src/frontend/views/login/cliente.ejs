@@ -1,0 +1,46 @@
+<%- include('../header.ejs') %>
+
+<form id="logar-cliente" class="styled-form" onsubmit="logarCliente()">
+    <div class="form-container">
+        <p class="profile"></p>
+
+        <p>
+            <label for="login">Login:</label>
+            <input type="text" id="login" name="login" placeholder="Informe o login" />
+        </p>
+        <p>
+            <label for="password">Senha:</label>
+            <input type="password" id="password" name="password" placeholder="Informe a senha" />
+        </p>
+
+        <p>
+            <button>Entrar</button>
+        </p>
+    </div>
+</form>
+<script>
+    async function logarCliente(event) {
+        event = event? event : window.event;
+        event.preventDefault();
+
+        let formulario = document.getElementById('logar-cliente');
+        let login = formulario.login.value;
+        let password = formulario.password.value;
+
+        let resposta = await api(
+            'POST',
+            'login', 
+            JSON.stringify({ login, password }),
+            {'Content-Type': 'application/json'}
+        );
+
+        if(!!resposta.message)
+            return mensagem('A', resposta.message)
+
+        logon(resposta);
+
+        return goToHome();
+    }
+</script>
+
+<%- include('../footer.ejs') %>

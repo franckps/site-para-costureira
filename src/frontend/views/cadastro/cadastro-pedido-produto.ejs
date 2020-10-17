@@ -1,0 +1,79 @@
+<%- include('../header.ejs') %>
+<%
+let prof = '';
+if(typeof profile == 'string')
+    prof = profile;
+%>
+%>
+<%
+    if(typeof produto == 'object'){
+%>
+    <div class="detalhamento-produto-servico">
+        <img src="<%= produto.image %>"/>
+        <h1><%= produto.name %></h1>
+        <h3><%= produto.kind %></h3>
+        <p><%= produto.description %></p>
+        <span>R$ <%= parseFloat(produto.price).toFixed(2) %> </span>
+        <span>Quantidade em estoque: <%= produto.stock %></span>
+    </div>
+    <% if(prof == 'customer'){ %>
+    <form class="styled-form" id="pedido-produto-form" onsubmit="cadastraPedido()">
+        <fieldset class="form-container">
+            <legend>Pedir produto</legend>
+            <input type="hidden" id="product_id" name="product_id" value="<%= (typeof product_id != 'undefined')? product_id : '' %>"/>
+
+            <p>
+                <label for="amount">Quantidade:</label>
+                <input 
+                    type="number" 
+                    id="amount" 
+                    name="amount" 
+                    max="<%= produto.stock %>"
+                    min="0"
+                    placeholder="Informe a quantidade desejada" 
+                    value=<%= (typeof amount != 'undefined')? amount : '0' %>
+                />
+            </p>
+            <p>
+                <label for="description">Descrição do produto:</label>
+                <textarea 
+                    id="description" 
+                    name="description" 
+                    placeholder="Descreva o produto que você deseja"
+                ><%= (typeof description != 'undefined')? description : '' %></textarea>
+            </p>
+
+            <p>
+                <button>Cadastrar</button>
+            </p>
+        </fieldset>
+    </form>
+    <% } %>
+    <br/><br/>
+    <script>
+        async function cadastraPedido(event) {
+            event = event? event : window.event;
+            event.preventDefault();
+
+            formulario = document.getElementById('pedido-produto-form');
+            let { product_id, amount, description } = formulario;
+            product_id = product_id.value, amount = amount.value, description = description.value;
+
+            if(!product_id || !amount || !description)
+                return mensagem('A', 'Todos os campos são obrigatórios!');
+
+            let form = new FormData(formulario);
+
+            let response = await api('POST','request',form);
+
+            console.log(response);
+
+            mensagem('S', 'Pedido realizado com sucesso!');
+
+            return goToRoute('/web/pedido')
+        }
+    </script>
+<%
+    }
+%>
+<%- include('../footer.ejs') %>

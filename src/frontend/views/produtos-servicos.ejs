@@ -1,0 +1,18 @@
+<%- include('./header.ejs') %>
+<%
+let item = []
+if(typeof items == 'object')
+    item = items;
+%>
+
+<div class="lista-produtos">
+    <% item.map(element => { %>
+        <a href="/web/pedido/<%= element.tipo %>/cadastro/<%= element.id %>" class="item-produto">
+            <span class="img" style="background-image: url('<%= element.image %>');"></span>
+            <p><%= element.name %></p>
+            <p><%= element.description %></p>
+        </a>
+    <% }); %>
+</div>
+
+<%- include('./footer.ejs') %>

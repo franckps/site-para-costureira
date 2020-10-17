@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<%
+let prof = '';
+if(typeof profile == 'string')
+    prof = profile;
+%>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Site para costureiras</title>
+    <link rel="stylesheet" href="/web/public/styles.css">
+    <script src="/web/public/scripts.js" ></script>
+    <link rel="stylesheet" type="text/css" href="/web/public/css/main.css">
+    <link rel="stylesheet" type="text/css" href="/web/public/css/slick.css" />
+</head>
+
+<body>
+<% if(prof != 'user'){ %>
+    <input type="checkbox" id="detalhes-open" />
+    <div id="detalhes-container-fundo">
+        <div id="detalhes-container">
+            <div class="cabecalho">
+                <span class="titulo">Detalhes</span>
+                <label for="detalhes-open" class="fechar">X</label>
+            </div>
+            <div class="conteudo">
+
+            </div>
+        </div>
+    </div>
+    <header>
+        <div class="menu-principal">
+            <div class="logo">
+                <a href="/web">
+                    <img src="/web/public/icones/logo.png" />
+                </a>
+            </div>
+            <ul class="redes-sociais">
+                <li>
+                    <a href="">
+                        <img src="/web/public/icones/face.png" />
+                    </a>
+                </li>
+                <li>
+                    <details>
+                        <summary>
+                            <span class="profile-image" style="background-image: url(/web/public/icones/profile.png)"></span>
+                        </summary>
+                        <section>
+                            <a href="/web/cliente/cadastro">
+                                Cadastre-se
+                            </a>
+                            <a href="/web/login">
+                                Fazer login
+                            </a>
+                            <a href="/web/login/usuario">
+                                Administrador
+                            </a>
+                        </section>
+                    </details>
+                </li>
+            </ul>
+        </div>
+        <div class="menu-secundario">
+            <ul class="menu">
+                <li>
+                    <a href="#">Sobre</a>
+                </li>
+                <li>
+                    <a href="/web/servicos">Serviços</a>
+                </li>
+                <li>
+                    <a href="/web/produtos">Produtos</a>
+                </li>
+            </ul>
+            <form action="/web" class="busca">
+                <input name="pesquisa" placeholder="Buscar produto" type="text" />
+            </form>
+        </div>
+    </header>
+    <script>
+        let profileToken = getToken();
+        let profileProfile = getProfile();
+        let profileImage = getImage();
+        if(!!profileToken && !!profileProfile) {
+            if(profileProfile == 'customer') {
+                if(!!profileImage)
+                    document.querySelector('details .profile-image').style.backgroundImage = `url('${profileImage}')`;
+
+                document.querySelector('details section').innerHTML = `
+                <a href="/web/cliente/cadastro/${getId()}">
+                    Alterar
+                </a>
+                <a href="/web/pedido">
+                    Pedidos
+                </a>
+                <span onclick="logout()">
+                    Sair
+                </span>`
+            }
+        }
+    </script>
+<% } else { %>
+    <input type="checkbox" id="detalhes-open" />
+    <div id="detalhes-container-fundo">
+        <div id="detalhes-container">
+            <div class="cabecalho">
+                <span class="titulo">Detalhes</span>
+                <label for="detalhes-open" class="fechar">X</label>
+            </div>
+            <div class="conteudo">
+
+            </div>
+        </div>
+    </div>
+    <header>
+        <div class="menu-principal">
+            <div class="menu-sandwich">
+                <details ontoggle="openDetails()">
+                    <summary>
+                        <label></label>
+                    </summary>
+                    <section>
+                        <a href="/web/pedido">
+                            Pedidos
+                        </a>
+                        <a href="/web/usuario">
+                            Usuarios
+                        </a>
+                        <a href="/web/cliente">
+                            Clientes
+                        </a>
+                        <a href="/web/produto">
+                            Produtos
+                        </a>
+                        <a href="/web/servico">
+                            Serviços
+                        </a>
+                    </section>
+                </details>
+            </div>
+            <ul class="redes-sociais">
+                <li>
+                    <details ontoggle="openDetails()">
+                        <summary>
+                            <span class="profile-image" style="background-image: url(/web/public/icones/profile.png)"></span>
+                        </summary>
+                        <section>
+                        </section>
+                    </details>
+                </li>
+            </ul>
+        </div>
+        <script>
+            let profileToken = getToken();
+            let profileProfile = getProfile();
+            let profileImage = getImage();
+            if(!!profileToken && !!profileProfile) {
+                if(profileProfile == 'user') {
+                    if(!!profileImage)
+                        document.querySelector('details .profile-image').style.backgroundImage = `url('${profileImage}')`;
+                    document.querySelector('.redes-sociais details section').innerHTML = `
+                    <a href="/web/usuario/cadastro/${getId()}">
+                        Alterar
+                    </a>
+                    <span onclick="logout()">
+                        Sair
+                    </span>`
+                }
+            }
+
+            function openDetails(event) {
+                event = event? event : window.event;
+                let currentSection = event.target.querySelector('section');
+                let openedDetais = [...document.getElementsByTagName('details')];
+
+                openedDetais.forEach(element => { 
+                    if(currentSection != element.querySelector('section')) element.querySelector('section').style.display = 'none';
+                    else element.querySelector('section').style.display = null;
+                });
+            }
+        </script>
+<div style="min-height: calc(100vh - 90px); width: 100%;">
+<% } %>

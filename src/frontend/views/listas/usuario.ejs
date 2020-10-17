@@ -1,0 +1,40 @@
+<%- include('../header.ejs') %>
+<form class="form-list">
+    <button type="button" onclick="goToRoute('/web/usuario/cadastro')">Novo usuário</button>
+</form>
+
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th></th>
+                <th class="identify">ID</th>
+                <th>NOME</th>
+                <th>LOGIN</th>
+            </tr>
+        </thead>
+        <tbody>
+        <%
+            if(typeof dados == 'object'){
+                if(!!dados[0]){
+                    dados.map( element => {
+        %>
+            <tr>
+                <th><img class="profile" src="<%= !!element.image? element.image : '/web/public/icones/profile.png' %>" /></th>
+                <td class="identify"><%= element.id %></td>
+                <td><%= element.name %></td>
+                <td><%= element.login %></td>
+            </tr>
+        <%
+                    });
+                }
+            }
+        %>
+        </tbody>
+    </table>
+</div>
+<script>
+
+</script>
+
+<%- include('../footer.ejs') %>

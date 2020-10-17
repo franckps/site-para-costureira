@@ -1,0 +1,84 @@
+<%- include('../header.ejs') %>
+
+<form id="cliente-form" class="styled-form" onsubmit="cadastraCliente()">
+    <div class="form-container">
+        <p class="profile">
+            <label for="profile"></label>
+            <input type="file" name="image" id="profile" onchange="changeProfile()"/>
+        </p>
+
+        <p>
+            <label for="name">Nome:</label>
+            <input type="text" id="name" name="name" placeholder="Coloque seu nome" />
+        </p>
+        <p>
+            <label for="phone">Telefone:</label>
+            <input type="text" id="phone" name="phone" onkeyup="mascaraPhone()" type="text" placeholder="Informe seu telefone" />
+        </p>
+        <p>
+            <label for="login">Login:</label>
+            <input type="text" id="login" name="login" placeholder="Crie um nome de login" onblur="existeLoginCliente()" />
+            <span  id="login-information"></span>
+        </p>
+        <p>
+            <label for="password">Senha:</label>
+            <input type="password" id="password" name="password" placeholder="Digite uma senha" />
+        </p>
+        <p>
+            <label for="confirmPassword">Confirmar senha:</label>
+            <input type="password" id="confirmPassword" placeholder="Digite a senha novamente" />
+        </p>
+
+        <p>
+            <button>Cadastrar</button>
+        </p>
+    </div>
+</form>
+<script>
+    
+    async function cadastraCliente(event) {
+        event = event? event : window.event;
+        event.preventDefault();
+
+        formulario = document.getElementById('cliente-form');
+        let confirmPassword = document.getElementById('confirmPassword').value;
+        let { name, phone, login, password } = formulario;
+        name = name.value, phone = phone.value, login = login.value, password = password.value;
+
+        if(!name || !phone || !login || !password || !confirmPassword)
+            return mensagem('A', 'Todos os campos são obrigatórios!');
+
+        if(password !== confirmPassword)
+            return mensagem('A', 'As duas senhas devem ser iguais!');
+
+        let form = new FormData(formulario);
+
+        let resposta = await api('POST','customer',form);
+
+        if(!!resposta.message)
+            return mensagem('A', resposta.message)
+
+        logon(resposta);
+
+        mensagem('S', 'Dados cadastrados com sucesso!');
+
+        return goToHome();
+    }
+
+    async function existeLoginCliente() {
+        formulario = document.getElementById('cliente-form');
+        let login = formulario.login.value;
+
+        let response = await api('GET','customer/login/' + login,null);
+
+        if(!response.message){
+            console.log(response)
+            document.getElementById('login').value = null
+            return document.getElementById('login-information').innerHTML = 'O login já existe! Tente outro'
+        }
+
+        document.getElementById('login-information').innerHTML = ''
+    }
+</script>
+
+<%- include('../footer.ejs') %>

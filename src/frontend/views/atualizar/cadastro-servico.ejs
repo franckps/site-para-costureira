@@ -1,0 +1,56 @@
+<%- include('../header.ejs') %>
+
+<% if(typeof servico == 'object') { %>
+
+<form class="styled-form" id="servico-form" onsubmit="cadastraServico()">
+    <div class="form-container">
+        <p class="image" style="background-image: url('<%= servico.image %>');">
+            <label for="image"></label>
+            <input type="file" name="image" id="image" onchange="changeImage()">
+        </p>
+        
+        <p>
+            <label for="name">Nome do serviço:</label>
+            <input type="text" id="name" name="name" value="<%= servico.name %>" placeholder="Coloque o nome do serviço" />
+        </p>
+        <p>
+            <label for="kind">Tipo do serviço:</label>
+            <input type="text" id="kind" name="kind" value="<%= servico.kind %>" placeholder="Defina o tipo de serviço" />
+        </p>
+        <p>
+            <label for="price">Preço do serviço:</label>
+            <input type="number" id="price" name="price" value="<%= servico.price %>" placeholder="Informe o valor do serviço" />
+        </p>
+        <p>
+            <label for="description">Descrição do serviço:</label>
+            <textarea id="description" name="description" placeholder="Descreva o serviço"><%= servico.description %></textarea>
+        </p>
+
+        <p>
+            <button>Salvar</button>
+        </p>
+    </div>
+</form>
+<script>
+    async function cadastraServico(event) {
+        event = event? event : window.event;
+        event.preventDefault();
+
+        formulario = document.getElementById('servico-form');
+        let { name, kind, price, description } = formulario;
+        name = name.value, kind = kind.value, price = price.value, description = description.value;
+
+        if(!name || !kind || !price || !description)
+            return mensagem('A', 'Todos os campos são obrigatórios!');
+
+        let form = new FormData(formulario);
+
+        let response = await api('PUT','service/<%= servico.id %>',form);
+
+        return mensagem('S', 'Dados alterados com sucesso!');
+    }
+</script>
+
+<% } %>
+
+<%- include('../footer.ejs') %>

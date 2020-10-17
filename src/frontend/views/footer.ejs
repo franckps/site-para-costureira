@@ -1,0 +1,56 @@
+<%
+let prof = '';
+if(typeof profile == 'string')
+    prof = profile;
+%>
+</div>
+<% if(prof != 'user') { %>
+<footer>
+    <div class="content">
+        <div>
+            <h3><b>Tags</b></h3>
+            <p>
+                costureiras costuras serviços produtos mascaras vestidos
+                calças roupas personalizar vestir moda feminino masculino
+                reparos bainha
+            </p>
+        </div>
+        <div>
+            <h3><b>A little about us</b></h3>
+            <p>
+                There are many variations of passages of Lorem Ipsum available, but the majority have suffered
+                alteration in some form, by injected humour, or randomised words which don't look even slightly
+                believable.
+                If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything.
+            </p>
+        </div>
+        <div>
+            <h3><b>Contato e localização</b></h3>
+            <p>
+                Nós estamos localizados na Avenida Bucar Neto, número 2118 atrás da concessionária ALENCAUTO.
+            </p>
+            <p class="local">Avenida Bucar Neto, Floriano - PI<p>
+            <p class="emailico">costureirasonline@hotmail.com<p>
+            <p class="telefoneico">(89) 99532-3522<p>
+        </div>
+    </div>
+    <div class="content">
+        <p>
+            Todos os direitos reservados © 2020
+        </p>
+    </div>
+</footer>
+<% } else { %>
+    <footer>
+        <div class="content">
+            <p></p>
+        </div>
+    </footer>
+<% } %>
+<script type="text/javascript" src="/web/public/js/jquery.js"></script>
+<script type="text/javascript" src="/web/public/js/jquery-migrate.js"></script>
+<script type="text/javascript" src="/web/public/js/slick.min.js"></script>
+<script type="text/javascript" src="/web/public/js/main.js"></script>
+</body>
+
+</html>

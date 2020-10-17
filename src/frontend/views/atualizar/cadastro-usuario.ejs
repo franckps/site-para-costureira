@@ -1,0 +1,95 @@
+<%- include('../header.ejs') %>
+<% if(typeof usuario == 'object') { %>
+
+<form id="usuario-form" class="styled-form" onsubmit="alterarUsuario()">
+    <div class="form-container">
+        <p class="profile" style="background-image: url('<%= usuario.image %>');">
+            <label for="profile"></label>
+            <input type="file" name="image" id="profile" onchange="changeProfile()"/>
+        </p>
+
+        <p>
+            <label for="name">Nome:</label>
+            <input type="text" id="name" name="name" value="<%= usuario.name %>" placeholder="Coloque seu nome" />
+        </p>
+
+        <p>
+            <button type="button" onclick="alterarSenha()">Alterar senha</button>
+        </p>
+        <p>
+            <button>Cadastrar</button>
+        </p>
+    </div>
+</form>
+<script>
+    function alterarSenha() {
+        document.getElementById('usuario-form').innerHTML = `
+        <div class="form-container">
+            <p>
+                <label for="password">Senha:</label>
+                <input type="password" id="password" name="password" placeholder="Digite uma senha" />
+            </p>
+            <p>
+                <label for="confirmPassword">Confirmar senha:</label>
+                <input type="password" id="confirmPassword" placeholder="Digite a senha novamente" />
+            </p>
+            
+            <p>
+                <button>Salvar</button>
+            </p>
+        </div>
+        `
+    }
+
+    async function alterarUsuario(event) {
+        event = event? event : window.event;
+        event.preventDefault();
+
+        formulario = document.getElementById('usuario-form');
+        let { name, password } = formulario;
+        if(!!name){
+            name = name.value;
+
+            if(!name)
+                return mensagem('A', 'O nome deve ser preenchido!');
+
+        } else if(!!password) {
+            password = password.value;
+            let confirmPassword = document.getElementById('confirmPassword').value;
+            if(password !== confirmPassword)
+                return mensagem('A', 'As duas senhas devem ser iguais!');
+
+        }
+        else return mensagem('A', 'Nenhum dado informado!');
+
+        let form = new FormData(formulario);
+
+        let resposta = await api('PUT',`user/${getId()}`,form);
+
+        if(!!resposta.message)
+            return mensagem('A', resposta.message)
+
+        if(!!resposta.image)
+            setImage(resposta.image)
+
+        mensagem('S', 'Dados Salvos com sucesso!');
+
+        return goToHome();
+    }
+
+    async function existeLoginUsuario() {
+        formulario = document.getElementById('usuario-form');
+        let login = formulario.login.value;
+
+        let response = await api('GET','user/login/' + login,null);
+
+        if(!response.message){
+            document.getElementById('login').value = null
+            return document.getElementById('login-information').innerHTML = 'O login já existe! Tente outro'
+        }
+
+        document.getElementById('login-information').innerHTML = ''
+    }
+</script>
+<% } %>
+<%- include('../footer.ejs') %>

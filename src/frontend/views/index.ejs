@@ -1,0 +1,69 @@
+<%- include('./header.ejs') %>
+<%
+let prof = '';
+if(typeof profile == 'string')
+    prof = profile;
+%>
+<% if(prof != 'user'){ %>
+<%
+let item = []
+if(typeof items == 'object')
+    item = items;
+%>
+<div class="slider">
+    <div class="slider-principal">
+        <div class="div-slide" style="background-image: url(/web/public/icones/mulher.png);"></div>
+        <div class="div-slide" style="background-image: url(/web/public/icones/mulher1.png);"></div>
+        <div class="div-slide" style="background-image: url(/web/public/icones/mulher2.png);"></div>
+    </div>
+</div>
+<div class="texto-inicial">
+        <div>
+            <h1>Roupas e serviços de costura que lhe cabem</h1>
+            <p>Aqui você encontra roupas personalizadas e ajustadas ao seu corpo,
+               Você compra e pode ajustar na hora sem pagar nada a mais por 
+               pequenos ajustes. Você também encontra os melhores serviços em costura
+               reparo e personalização de roupas.
+            </p>
+        </div>
+        <div>
+            <div style="background-image: url('/web/public/icones/roupas.jpg');"></div>
+            <!--<img src="/web/public/icones/roupas.jpg" /> -->
+            <h3><b>Roupas</b> personalizadas</h3>
+            <p>
+                Encontre as melhores roupas e nos melhores tecidos do mercado feitos visando as tendências da atualidade.
+            </p>
+        </div>
+        <div class="margin-top-6">
+            <div style="background-image: url('/web/public/icones/costuras.jpg');"></div>
+            <!--<img src="/web/public/icones/costuras.jpg" /> -->
+            <h3><b>Costuras</b> a seu gosto</h3>
+            <p>
+                Encomende costuras a seu gosto e roupas pensadas exclusivamente para você, e com a certeza de não encontrar outra pessoa vestindo o mesmo.
+            </p>
+        </div>
+        <div>
+            <div style="background-image: url('/web/public/icones/reparos.jpg');"></div>
+            <!--<img src="/web/public/icones/reparos.jpg" /> -->
+            <h3><b>Reparos</b> feitos com amor</h3>
+            <p>
+                Quer recuperar aquela roupa linda que você ama? Então venha e faça um reparo para que possa tirar ela do armário novamente.
+            </p>
+        </div>
+</div>
+<div class="lista-produtos">
+    <% item.map(element => { %>
+        <a href="/web/pedido/<%= element.tipo %>/cadastro/<%= element.id %>" class="item-produto">
+            <span class="img" style="background-image: url('<%= element.image %>');"></span>
+            <p><%= element.name %></p>
+            <p><%= element.description %></p>
+        </a>
+    <% }); %>
+</div>
+<div class="col-100 bloco-logos">
+
+</div>
+<% } else { %>
+    <span></span>
+<% } %>
+<%- include('./footer.ejs') %>

@@ -1,0 +1,312 @@
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    outline: none;
+    font-family: 'Roboto', sans-serif;
+    font-size: 12px;
+}
+
+#detalhes-open {
+    display: none;
+}
+#detalhes-container-fundo {
+    display: none;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+#detalhes-open:checked ~ #detalhes-container-fundo {
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    min-height: 100vh;
+    z-index: 1000000000;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+#detalhes-container-fundo::after {
+    content: '';
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: #000;
+}
+#detalhes-container-fundo #detalhes-container {
+    display: flex;
+    flex-direction:column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 500px;
+    background-color: #fff;
+    padding: 10px;
+    z-index: 1000;
+    border-radius: 10px;
+}
+#detalhes-container-fundo #detalhes-container > * {
+    padding: 10px;
+}
+#detalhes-container-fundo #detalhes-container .cabecalho {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #ccc;
+}
+#detalhes-container-fundo #detalhes-container .cabecalho .fechar {
+    font-size: 1.3rem;
+    color: #f00;
+    cursor: pointer;
+}
+#detalhes-container-fundo #detalhes-container .conteudo {
+    width: 100%;
+    min-height: 30px;
+}
+
+.styled-form {
+    padding: 150px 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.styled-form > .form-container {
+    border: 1px solid #000;
+    padding: 25px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 500px;
+}
+
+.styled-form > .form-container > .profile {
+    background-color: #fff;
+    border: 1px solid #000;
+    height: 120px;
+    width: 120px;
+    margin-top: -85px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-bottom: 10px;
+    background-image: url("/web/public/icones/profile.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 75%;
+}
+.styled-form > .form-container > .profile > input {
+    display: none;
+}
+.styled-form > .form-container > .profile > label {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-image: url("/web/public/icones/camera.png");
+    background-repeat: no-repeat;
+    background-position: 10px 75%;
+    background-size: 35px;
+    opacity: .3;
+    cursor: pointer;
+}
+.styled-form > .form-container > .profile > label:hover {
+    opacity: 1;
+}
+
+.styled-form > .form-container > .image {
+    background-color: #fff;
+    border: 1px solid #000;
+    height: 150px;
+    width: 200px;
+    max-width: 100%;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 10px;
+    background-image: url("/web/public/icones/image.png");
+    background-repeat: no-repeat;
+    background-position: bottom;
+    background-size: contain;
+    align-self: flex-start;
+}
+.styled-form > .form-container > .image > input {
+    display: none;
+}
+.styled-form > .form-container > .image > label {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-image: url("/web/public/icones/camera.png");
+    background-repeat: no-repeat;
+    background-position: 0px 100%;
+    background-size: 50px;
+    opacity: .3;
+    cursor: pointer;
+}
+.styled-form > .form-container > .image > label:hover {
+    opacity: 1;
+}
+
+.styled-form > .form-container > p:not(.profile):not(.image) {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 5px 0;
+}
+.styled-form > .form-container > p:not(.profile):not(.image) > input,
+.styled-form > .form-container > p:not(.profile):not(.image) > textarea,
+.styled-form > .form-container > p:not(.profile):not(.image) > select {
+    border: 1px solid #909090;
+    border-radius: 5px;
+    padding: 7px 25px;
+    background-color: #dfdfdf;
+    resize: vertical;
+}
+.styled-form > .form-container > p:not(.profile):not(.image) > label {
+    font-weight: bold;
+    padding: 3px 0;
+}
+
+.styled-form > .form-container > p:not(.profile):not(.image) > button {
+    background-color: #37f;
+    color: #fff;
+    box-sizing: content-box;
+    border: 2px solid #25f;
+    border-radius: 10px;
+    width: 100px;
+    align-self: center;
+    font-weight: bold;
+    padding: 10px 15px;
+    margin-top: 25px;
+    cursor: pointer;
+}
+
+.table-container{
+    margin-top: 25px;
+    margin-bottom: 25px;
+    width: 100%;
+    position: relative;
+    overflow-x: auto;
+}
+table {
+    min-width: 700px;
+    width: 80%;
+    margin: 0 auto;
+    overflow: hidden;
+    border: 1px solid #000;
+    border-radius: 10px;
+    border-spacing: 0;
+
+}
+
+table thead{
+    background-color: #ccc;
+}
+
+table thead tr th {
+    padding: 10px 0;
+    text-align: left;
+    border-bottom: 1px solid #000;
+}
+
+table tbody tr > * {
+    border-bottom: 1px solid #000;
+    padding: 5px 0;
+}
+table tbody tr:nth-last-of-type(1) > * {
+    border-bottom: none;
+}
+
+table tr img.profile {
+    display: inline-block;
+    height: 40px;
+    width: 40px;
+    border: 1px solid #000;
+    border-radius: 50%;
+    padding: 5px;
+}
+
+table tr img.image {
+    display: inline-block;
+    height: 60px;
+    width: 60px;
+    border: 1px solid #000;
+    border-radius: 5px;
+    padding: 0px;
+}
+
+table tr button {
+    background-color: transparent;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+table tr button img {
+    display: inline-block;
+    height: 25px;
+    width: 25px;
+}
+
+
+table tr .identify {
+    position: sticky;
+    left: 0;
+    padding-left: 5px;
+}
+table thead tr .identify {
+    background-color: #ccc;
+}
+table tbody tr .identify {
+    background-color: #fff;
+}
+
+.form-list > button {
+    max-width: 150px;
+    width: 100%;
+    display: inline-block;
+    text-align: center;
+    margin: 0 auto;
+    margin-top: 25px;
+    padding: 10px;
+    border-radius: 10px;
+    color: #fff;
+    background-color: #080;
+    cursor: pointer;
+}
+
+.form-list, .form-list p {
+    max-width: 400px;
+    width: 100%;
+    display: flex;
+    margin: 0 auto;
+    margin-top: 25px;
+    text-align: center;
+}
+
+.form-list p input {
+    flex: 1;
+    display: inline-block;
+    border: 1px solid #909090;
+    border-radius: 5px 0 0 5px;
+    padding: 7px 25px;
+    background-color: #dfdfdf;
+}
+.form-list p button {
+    padding: 2px;
+    width: 50px;
+    border: 1px solid #909090;
+    border-radius: 0 5px 5px 0;
+}

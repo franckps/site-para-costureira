@@ -1,0 +1,61 @@
+<%- include('../header.ejs') %>
+<%
+let prof = '';
+if(typeof profile == 'string')
+    prof = profile;
+%>
+<%
+    if(typeof servico == 'object'){
+%>
+    <div class="detalhamento-produto-servico">
+        <img src="<%= servico.image %>"/>
+        <h1><%= servico.name %></h1>
+        <h3><%= servico.kind %></h3>
+        <p><%= servico.description %></p>
+        <span>R$ <%= parseFloat(servico.price).toFixed(2) %> </span>
+    </div>
+    <% if(prof == 'customer'){ %>
+    <form class="styled-form" id="pedido-servico-form" onsubmit="cadastraPedido()">
+        <fieldset class="form-container">
+            <legend>Pedir serviço</legend>
+            <input type="hidden" id="service_id" name="service_id" value="<%= (typeof service_id != 'undefined')? service_id : '' %>"/>
+            <p>
+                <label for="description">Descrição do serviço:</label>
+                <textarea id="description" name="description" placeholder="Descreva o serviço que você deseja"><%= (typeof description != 'undefined')? description : '' %></textarea>
+            </p>
+
+            <p>
+                <button>Cadastrar</button>
+            </p>
+        </fieldset>
+    </form>
+    <% } %>
+    <br/><br/>
+    <script>
+        async function cadastraPedido(event) {
+            event = event? event : window.event;
+            event.preventDefault();
+
+            formulario = document.getElementById('pedido-servico-form');
+            let { service_id, description } = formulario;
+            service_id = service_id.value, description = description.value;
+            
+            if(!service_id || !description)
+                return mensagem('A', 'Todos os campos são obrigatórios!');
+
+            let form = new FormData(formulario);
+
+            let response = await api('POST','request',form);
+
+            console.log(response);
+
+            mensagem('S', 'Pedido realizado com sucesso!');
+
+            return goToRoute('/web/pedido')
+        }
+    </script>
+<%
+    }
+%>
+
+<%- include('../footer.ejs') %>

@@ -1,0 +1,62 @@
+<%- include('../header.ejs') %>
+
+<% if(typeof produto == 'object') { %>
+
+<form class="styled-form" id="produto-form" onsubmit="cadastraProduto()">
+    <div class="form-container">
+        <p class="image" style="background-image: url('<%= produto.image %>');">
+            <label for="image"></label>
+            <input type="file" name="image" id="image" onchange="changeImage()">
+        </p>
+
+        <p>
+            <label for="name">Nome do produto:</label>
+            <input type="text" id="name" name="name" value="<%= produto.name %>" placeholder="Coloque o nome do produto" />
+        </p>
+        <p>
+            <label for="kind">Tipo do produto:</label>
+            <input type="text" id="kind" name="kind" value="<%= produto.kind %>" placeholder="Defina o tipo de produto" />
+        </p>
+        <p>
+            <label for="price">Preço do produto:</label>
+            <input type="number" id="price" name="price" value="<%= produto.price %>" placeholder="Informe o valor do produto" />
+        </p>
+        <p>
+            <label for="stock">Quantidade:</label>
+            <input type="number" id="stock" name="stock" value="<%= produto.stock %>" placeholder="Informe a quantidade em estoque" />
+        </p>
+        <p>
+            <label for="description">Descrição do produto:</label>
+            <textarea id="description" name="description" placeholder="Descreva o produto"><%= produto.description %></textarea>
+        </p>
+
+        <p>
+            <button>Salvar</button>
+        </p>
+    </div>
+</form>
+<script>
+    async function cadastraProduto(event) {
+        event = event? event : window.event;
+        event.preventDefault();
+
+        formulario = document.getElementById('produto-form');
+        let { name, kind, price, stock, description } = formulario;
+        name = name.value, kind = kind.value, price = price.value, stock = stock.value, description = description.value;
+
+        if(!name || !kind || !price || !stock || !description)
+            return mensagem('A', 'Todos os campos são obrigatórios!');
+
+        let form = new FormData(formulario);
+
+        let response = await api('PUT','product/<%= produto.id %>',form);
+
+        console.log(response);
+
+        return mensagem('S', 'Dados alterados com sucesso!');
+    }
+</script>
+
+<% } %>
+
+<%- include('../footer.ejs') %>

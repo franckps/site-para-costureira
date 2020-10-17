@@ -1,0 +1,44 @@
+<%- include('../header.ejs') %>
+<form class="form-list">
+    <button type="button" onclick="goToRoute('/web/produto/cadastro')">Novo produto</button>
+</form>
+
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th></th>
+                <th class="identify">ID</th>
+                <th>NOME</th>
+                <th>TIPO</th>
+                <th>QUANT.</th>
+                <th>PREÇO</th>
+            </tr>
+        </thead>
+        <tbody>
+        <%
+            if(typeof dados == 'object'){
+                if(!!dados[0]){
+                    dados.map( element => {
+        %>
+            <tr onclick="goToRoute('/web/produto/cadastro/<%= element.id %>')">
+                <th><img class="image" src="<%= !!element.image? element.image : '/web/public/icones/profile.png' %>" /></th>
+                <td class="identify"><%= element.id %></td>
+                <td><%= element.name %></td>
+                <td><%= element.kind %></td>
+                <td><%= element.stock %></td>
+                <td>R$ <%= parseFloat(element.price).toFixed(2).replace('.',',') %></td>
+            </tr>
+        <%
+                    });
+                }
+            }
+        %>
+        </tbody>
+    </table>
+</div>
+<script>
+
+</script>
+
+<%- include('../footer.ejs') %>

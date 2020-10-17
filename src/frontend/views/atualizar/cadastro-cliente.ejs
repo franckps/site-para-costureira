@@ -1,0 +1,112 @@
+<%- include('../header.ejs') %>
+
+<%
+if(typeof cliente == 'object') {
+%>
+
+<form id="cliente-form" class="styled-form" onsubmit="updateCliente()">
+    <div class="form-container">
+        <p class="profile" style="background-image: url('<%= cliente.image %>');">
+            <label for="profile"></label>
+            <input 
+                type="file" 
+                name="image" 
+                id="profile" 
+                onchange="changeProfile()"
+            />
+        </p>
+
+        <p>
+            <label for="name">Nome:</label>
+            <input type="text" id="name" name="name" value="<%= cliente.name %>" placeholder="Coloque seu nome" />
+        </p>
+        <p>
+            <label for="phone">Telefone:</label>
+            <input type="text" id="phone" onkeyup="mascaraPhone()" value="<%= cliente.phone %>" name="phone" placeholder="Informe seu telefone" />
+        </p>
+
+        <p>
+            <button type="button" onclick="alterarSenha()">Alterar senha</button>
+        </p>
+        <p>
+            <button>Salvar</button>
+        </p>
+    </div>
+</form>
+<script>
+    function alterarSenha() {
+        document.getElementById('cliente-form').innerHTML = `
+        <div class="form-container">
+            <p>
+                <label for="password">Senha:</label>
+                <input type="password" id="password" name="password" placeholder="Digite uma senha" />
+            </p>
+            <p>
+                <label for="confirmPassword">Confirmar senha:</label>
+                <input type="password" id="confirmPassword" placeholder="Digite a senha novamente" />
+            </p>
+            
+            <p>
+                <button>Salvar</button>
+            </p>
+        </div>
+        `
+    }
+    
+    async function updateCliente(event) {
+        event = event? event : window.event;
+        event.preventDefault();
+
+        formulario = document.getElementById('cliente-form');
+        let { name, phone, password } = formulario;
+        if(!!name && !!phone){
+            name = name.value, phone = phone.value;
+
+            if(!name || !phone )
+                return mensagem('A', 'Todos os campos são obrigatórios!');
+
+        } else if(!!password) {
+            password = password.value;
+            let confirmPassword = document.getElementById('confirmPassword').value;
+            if(password !== confirmPassword)
+                return mensagem('A', 'As duas senhas devem ser iguais!');
+
+        }
+        else return mensagem('A', 'Nenhum dado informado!');
+
+        let form = new FormData(formulario);
+
+        let resposta = await api('PUT',`customer/${getId()}`,form);
+
+        if(!!resposta.message)
+            return mensagem('A', resposta.message)
+
+        if(!!resposta.image)
+            setImage(resposta.image)
+
+        mensagem('S', 'Dados Salvos com sucesso!');
+
+        return goToHome();
+    }
+
+    async function existeLoginCliente() {
+        formulario = document.getElementById('cliente-form');
+        let login = formulario.login.value;
+
+        let response = await api('GET','customer/login/' + login,null);
+
+        if(!response.message){
+            console.log(response)
+            document.getElementById('login').value = null
+            return document.getElementById('login-information').innerHTML = 'O login já existe! Tente outro'
+        }
+
+        document.getElementById('login-information').innerHTML = ''
+    }
+</script>
+
+<%
+}
+%>
+
+<%- include('../footer.ejs') %>

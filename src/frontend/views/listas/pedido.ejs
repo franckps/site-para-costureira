@@ -1,0 +1,199 @@
+<%- include('../header.ejs') %>
+<%
+let prof = 'customer';
+    if(typeof profile == 'string')
+        prof = profile
+%>
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th></th>
+                <th class="identify">ID</th>
+                <th>STATUS</th>
+                <th>NOME</th>
+                <th>PRODUTO/SERVIÇO</th>
+                <th>DATA</th>
+            </tr>
+        </thead>
+        <tbody>
+        <%
+            if(typeof dados == 'object'){
+                if(!!dados[0]){
+                    dados.map( element => {
+        %>
+            <tr onclick="openDetalhes(`<div class='detalhes-pedido'>
+                <% if(prof == 'user'){ %>
+                <span><img class='cliente' src='<%= element.image %>'/></span>
+                <span>Cliente: <%= element.name %></span>
+                <span>Telefone: <%= element.phone %></span>
+                <% } %>
+                <span><strong><%= element.product_name? 'Produto' : 'Serviço' %></strong></span>
+                <span><img class='produto_servico' src='<%= element.product_image? element.product_image : element.service_image %>'/></span>
+                <span><%= element.product_name? element.product_name : element.service_name %></span>
+                <span><%= element.product_description? element.product_description : element.service_description %></span>
+                <span>tipo: <%= element.product_kind? element.product_kind : element.service_kind %></span>
+                <span><%= element.product_stock? 'Em estoque: ' + element.product_stock : '' %></span>
+                <span>Preço: <%= element.product_price? parseFloat(element.product_price).toFixed(2) : parseFloat(element.service_price).toFixed(2) %></span>
+                <span><strong>Pedido</strong></span>
+                <span>data:
+                    <%= `${ element.requested_at.trim().split(' ')[0].split('-')[2] }/${ element.requested_at.trim().split(' ')[0].split('-')[1] }/${ element.requested_at.trim().split(' ')[0].split('-')[0] } - ${ element.requested_at.trim().split(' ')[1] }` %>
+                </span>
+                <span>Quantidade: <%= element.amount %></span>
+                <span><%= element.description %></span>
+                <span>Status: <%= element.state == 'A'? 'Aguardando aprovação' : element.state == 'C'? 'Cancelado' : element.state == 'F'? 'Finalizado' : 'Aprovado' %></span>
+                <span><%= element.state_description %></span>
+                <span>
+                    <% if(prof == 'user' && element.state == 'A'){ %> <button class='aprovar' onclick='aprovarPedido(<%= element.id %>)'>Aprovar</button> <% } %>
+                    <% if(prof == 'user' && element.state != 'C' && element.state != 'F'){ %> <button class='finalizar' onclick='finalizarPedido(<%= element.id %>)'>Finalizar</button> <% } %>
+                    <% if(prof == 'customer' && element.state != 'C' && element.state != 'F'){ %> <button class='cancelar' onclick='cancelarPedido(<%= element.id %>)'>Cancelar</button> <% } %>
+                </span>
+            </div>`)">
+                <th><img class="image" src="<%= element.product_image? element.product_image : element.service_image? element.service_image : '/web/public/icones/image.png' %>" /></th>
+                <td class="identify"><%= element.id %></td>
+                <td class="status-<%= element.state %>"><%= element.state == 'A'? 'Aguardando aprovação' : element.state == 'C'? 'Cancelado' : element.state == 'F'? 'Finalizado' : 'Aprovado' %></td>
+                <td><%= element.name %></td>
+                <td><%= element.product_name? element.product_name : element.service_name %></td>
+                <td>
+                    <%= `${ element.requested_at.trim().split(' ')[0].split('-')[2] }/${ element.requested_at.trim().split(' ')[0].split('-')[1] }/${ element.requested_at.trim().split(' ')[0].split('-')[0] } - ${ element.requested_at.trim().split(' ')[1] }` %>
+                </td>
+            </tr>
+        <%
+                    });
+                }
+            }
+        %>
+        <script>
+            async function aprovarPedido(id) {
+                if(!id)
+                    return mensagem('A', 'Id não informado!');
+
+                let perfilQueFinalizou = getProfile() == 'user'? 'Administrador' : 'Cliente' 
+                let aprova = confirm('Quer realmente aprovar o pedido?');
+
+                if(!aprova)
+                    return mensagem('A', 'Pedido não aprovado!');
+
+                let state = 'AP';
+                let state_description = `aprovado pelo ${perfilQueFinalizou}`;
+
+                let newForm = new FormData();
+                newForm.append('state', state);
+                newForm.append('state_description', state_description);
+
+                let resposta = await api('PUT',`request/${id}`, newForm );
+
+                if(!!resposta.message)
+                    return mensagem('A', resposta.message)
+
+                mensagem('S', 'Pedido aprovado com sucesso!');
+
+                return goToRoute('/web/pedido');
+            }
+
+            async function finalizarPedido(id) {
+                if(!id)
+                    return mensagem('A', 'Id não informado!');
+
+                let perfilQueFinalizou = getProfile() == 'user'? 'Administrador' : 'Cliente' 
+                let descricao = prompt('Qual o motivo da finalização?');
+
+                if(!descricao)
+                    return mensagem('A', 'Finalização cancelada!');
+
+                let state = 'F';
+                let state_description = `finalizado pelo ${perfilQueFinalizou} - motivo: ${descricao}`;
+
+                let newForm = new FormData();
+                newForm.append('state', state);
+                newForm.append('state_description', state_description);
+
+                let resposta = await api('PUT',`request/${id}`, newForm );
+
+                if(!!resposta.message)
+                    return mensagem('A', resposta.message)
+
+                mensagem('S', 'Pedido finalizado com sucesso!');
+
+                return goToRoute('/web/pedido');
+            }
+
+            async function cancelarPedido(id) {
+                if(!id)
+                    return mensagem('A', 'Id não informado!');
+
+                let perfilQueFinalizou = getProfile() == 'user'? 'Administrador' : 'Cliente' 
+                let descricao = prompt('Qual o motivo da finalização?');
+
+                if(!descricao)
+                    return mensagem('A', 'Pedido não cancelado!');
+
+                let state = 'C';
+                let state_description = `cancelado pelo ${perfilQueFinalizou} - motivo: ${descricao}`;
+
+                let newForm = new FormData();
+                newForm.append('state', state);
+                newForm.append('state_description', state_description);
+
+                let resposta = await api('PUT',`request/${id}`, newForm );
+
+                if(!!resposta.message)
+                    return mensagem('A', resposta.message)
+
+                mensagem('S', 'Pedido cancelado com sucesso!');
+
+                return goToRoute('/web/pedido');
+            }
+        </script>
+        <style>
+            .detalhes-pedido {
+                display: flex;
+                width: 100%;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+            }
+            .detalhes-pedido img {
+                display: inline;
+                height: 100px;
+                width: auto;
+            }
+            .detalhes-pedido button, .detalhes-pedido a {
+                text-decoration: none;
+                display: inline-block;
+                width: 100%;
+                box-sizing: border-box;
+                padding: 10px;
+                margin-top: 10px;
+                border-radius: 10px;
+                font-weight: bold;
+                cursor: pointer;
+            }
+            .detalhes-pedido .aprovar {
+                border: 1px solid #ccc;
+                background-color: #3f3;
+                color: #fff;
+            }
+            .detalhes-pedido .finalizar {
+                border: 1px solid #ccc;
+                background-color: #33f;
+                color: #fff;
+            }
+            .detalhes-pedido .cancelar {
+                border: 1px solid #ccc;
+                background-color: #f00;
+                color: #fff;
+            }
+
+            .status-A {
+                color: #f00;
+            }
+        </style>
+        </tbody>
+    </table>
+</div>
+<script>
+
+</script>
+
+<%- include('../footer.ejs') %>
