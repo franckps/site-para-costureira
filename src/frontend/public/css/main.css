@@ -357,6 +357,26 @@ li.slick-active button {
     margin-bottom: 15px;
 }
 
+.sobre{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 15px;
+    margin: 15px 0;
+}
+.sobre > * {
+    width: 100%;
+    max-width: 500px;
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+    text-align: justify;
+}
+.sobre > p::first-letter {
+    padding-left: 15px;
+}
+
 .detalhamento-produto-servico {
     width: 100%;
     max-width: 500px;

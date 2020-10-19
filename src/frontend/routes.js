@@ -69,6 +69,10 @@ router.get('/servicos', async (req, resp, next) => {
     ], profile: req.profile });
 })
 
+router.get('/sobre', async (req, resp, next) => {
+    resp.render('sobre.ejs', { profile: req.profile });
+})
+
 /**
  * Listas
  */
